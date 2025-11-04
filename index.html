@@ -1,0 +1,2959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wink Bite - Complete Ordering System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #ff9f1c;
+            --primary-dark: #e68a00;
+            --secondary: #5d4037;
+            --accent: #ff5252;
+            --light: #fff8f0;
+            --white: #ffffff;
+            --gray: #f5f5f5;
+            --dark: #333333;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--secondary);
+            border: 2px solid var(--secondary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--secondary);
+            color: var(--white);
+        }
+
+        /* Pink Vision & Mission button for hero */
+        .btn-vm {
+            background: linear-gradient(90deg,#ff6b95,#ff4d7e);
+            color: #fff;
+            border: none;
+        }
+
+        .btn-vm:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 18px rgba(255,77,126,0.18);
+        }
+
+        .btn-large {
+            padding: 15px 35px;
+            font-size: 1.1rem;
+        }
+
+        .btn-admin {
+            background: #9c27b0;
+            color: white;
+        }
+
+        .btn-admin:hover {
+            background: #7b1fa2;
+        }
+
+        .btn-staff {
+            background: #2196f3;
+            color: white;
+        }
+
+        .btn-staff:hover {
+            background: #1976d2;
+        }
+
+        /* Header & Navigation */
+        header {
+            background: var(--white);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--secondary);
+            text-decoration: none;
+        }
+
+        .logo i {
+            color: var(--primary);
+        }
+
+        /* Logo image styles */
+        .logo-img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+            display: block;
+            margin-right: 8px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--secondary);
+            font-weight: 600;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--secondary);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -6px;
+            right: -8px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1;
+            padding: 0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .user-role {
+            background: var(--primary);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .user-role.admin {
+            background: #9c27b0;
+        }
+
+        .user-role.staff {
+            background: #2196f3;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 8rem 0;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1558961363-fa8fdf82db35?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2000&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            text-align: center;
+            color: var(--white);
+        }
+
+        .hero h1, .hero p {
+            color: var(--white);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero h1 {
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 5rem 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-header p {
+            max-width: 600px;
+            margin: 0 auto;
+            color: var(--secondary);
+        }
+
+        /* Contact section: horizontal layout on wide screens, stacked on small screens */
+        .contact-content {
+            display: flex;
+            gap: 3rem;
+            align-items: flex-start;
+        }
+
+        .contact-content > div {
+            flex: 1;
+        }
+
+        @media (max-width: 800px) {
+            .contact-content {
+                flex-direction: column;
+            }
+        }
+
+        /* Cookies Grid */
+        .cookies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .cookie-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .cookie-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .cookie-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .cookie-content {
+            padding: 1.5rem;
+        }
+
+        .cookie-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0.5rem 0;
+        }
+
+        .cookie-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--gray);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .quantity {
+            font-weight: 600;
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-top: 2rem;
+        }
+
+        .admin-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--gray);
+            padding-bottom: 1rem;
+        }
+
+        .admin-tab {
+            padding: 10px 20px;
+            background: var(--gray);
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .admin-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .admin-content {
+            display: none;
+        }
+
+        .admin-content.active {
+            display: block;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .admin-table th, .admin-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--gray);
+        }
+
+        .admin-table th {
+            background: var(--gray);
+            font-weight: 600;
+        }
+
+        .admin-table tr:hover {
+            background: rgba(255, 159, 28, 0.05);
+        }
+
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-confirmed {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-preparing {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-ready {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .status-completed {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+        /* Staff Panel */
+        .staff-panel {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-top: 2rem;
+        }
+
+        /* Cart Sidebar */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 100%;
+            max-width: 400px;
+            height: 100vh;
+            background: var(--white);
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-sidebar.active {
+            right: 0;
+        }
+
+        .cart-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+
+        .cart-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--gray);
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--gray);
+        }
+
+        .cart-item-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .cart-item-details {
+            flex: 1;
+        }
+
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 0.5rem;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: var(--shadow);
+            transform: translateY(20px);
+            transition: var(--transition);
+            /* Keep modal content scrollable if it exceeds viewport height */
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        /* Track Order Modal Styles (pink & white theme) */
+        .track-steps {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-top: 1rem;
+            flex-wrap: nowrap;
+        }
+
+        .track-step {
+            flex: 1 1 0;
+            text-align: center;
+            position: relative;
+            padding: 10px 6px;
+        }
+
+        .track-step .icon {
+            font-size: 1.35rem;
+            display: inline-block;
+            width: 44px;
+            height: 44px;
+            line-height: 44px;
+            border-radius: 50%;
+            background: #ffeef6;
+            color: #ff4d7e;
+            margin: 0 auto 6px;
+            box-shadow: 0 3px 8px rgba(255,77,126,0.12);
+        }
+
+        .track-step.completed .icon {
+            background: #ff4d7e;
+            color: #fff;
+        }
+
+        .track-step .label {
+            font-size: 0.85rem;
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .track-step::after {
+            content: '';
+            position: absolute;
+            right: -6px;
+            top: 22px;
+            height: 4px;
+            width: 12px;
+            background: linear-gradient(90deg, #ffd5e4 0%, #ffeef6 100%);
+            z-index: 0;
+        }
+
+        .track-step:last-child::after { display: none; }
+
+        .track-progress {
+            margin-top: 1rem;
+            height: 8px;
+            background: #f3e6ea;
+            border-radius: 50px;
+            overflow: hidden;
+        }
+
+        .track-progress .bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b95, #ff4d7e);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .track-meta {
+            margin-top: 12px;
+            font-size: 0.95rem;
+            color: #333;
+        }
+
+        @media (max-width: 600px) {
+            .track-steps { gap: 8px; }
+            .track-step .label { font-size: 0.75rem; }
+            .track-step .icon { width: 36px; height: 36px; line-height: 36px; font-size: 1rem; }
+            .track-steps { overflow-x: auto; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--secondary);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 159, 28, 0.2);
+        }
+
+        .role-selector {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .role-option {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            border: 2px solid var(--gray);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .role-option.selected {
+            border-color: var(--primary);
+            background: rgba(255, 159, 28, 0.1);
+        }
+
+        /* Vision & Mission cards for About section */
+        .vm-container {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1.2rem;
+            align-items: stretch;
+            flex-wrap: wrap;
+        }
+
+        .vm-card {
+            background: linear-gradient(180deg, #fffaf6 0%, #fff5f8 100%);
+            border: 1px solid rgba(255, 77, 126, 0.08);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(255, 77, 126, 0.06);
+            flex: 1 1 45%;
+            text-align: center;
+        }
+
+        .vm-card h4 {
+            margin-bottom: 1rem;
+            color: var(--secondary);
+            font-size: 1.5rem;
+        }
+
+        .vm-card p, .vm-card ul {
+            color: #333;
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        .vm-card ul {
+            padding-left: 1.1rem;
+            margin-top: 0.25rem;
+        }
+
+        @media (max-width: 768px) {
+            .vm-container { flex-direction: column; }
+        }
+
+        /* Footer */
+        footer {
+            background: var(--secondary);
+            color: var(--white);
+            padding: 4rem 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column h3 {
+            color: var(--white);
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Utility Classes */
+        .text-center {
+            text-align: center;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .nav-toggle {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+        }
+
+        /* Payment Methods */
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Keep radio inputs available for keyboard and screen readers but visually hide them */
+        .payment-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .payment-option label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px 10px;
+            border: 2px solid var(--gray);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .payment-option input[type="radio"]:checked + label {
+            border-color: var(--primary);
+            background: rgba(255, 159, 28, 0.1);
+        }
+
+        .payment-option label i {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+
+        .payment-option label {
+            min-height: 64px;
+            justify-content: center;
+        }
+
+        .payment-details {
+            display: none;
+            margin-top: 12px;
+        }
+
+        .payment-details.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <a href="#" class="logo">
+                    <svg class="logo-img" width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="24" cy="24" r="20" fill="#ff9f1c"/>
+                        <circle cx="24" cy="24" r="16" fill="#fff8f0"/>
+                        <circle cx="18" cy="18" r="3" fill="#5d4037"/>
+                        <circle cx="30" cy="18" r="3" fill="#5d4037"/>
+                        <path d="M16 30 Q24 36 32 30" stroke="#5d4037" stroke-width="2" fill="none"/>
+                        <circle cx="15" cy="12" r="2" fill="#5d4037"/>
+                        <circle cx="33" cy="12" r="2" fill="#5d4037"/>
+                        <circle cx="20" cy="8" r="1.5" fill="#5d4037"/>
+                        <circle cx="28" cy="8" r="1.5" fill="#5d4037"/>
+                    </svg>
+                    <span>Wink Bite</span>
+                </a>
+                <div class="nav-links">
+                    <a href="#home" class="nav-link">Home</a>
+                    <a href="#menu" class="nav-link">Menu</a>
+                    <a href="#about" class="nav-link">About</a>
+                    <a href="#contact" class="nav-link">Contact</a>
+                </div>
+                <div class="nav-actions">
+                    <div class="user-info hidden" id="user-info">
+                        <span id="user-name">User</span>
+                        <span class="user-role" id="user-role">Customer</span>
+                        <button class="btn btn-link" id="my-orders-btn" style="margin-left: 10px; display: none;">My Orders</button>
+                    </div>
+                    <div class="cart-icon" id="cart-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count" id="cart-count">0</span>
+                    </div>
+                    <button class="btn btn-secondary" id="login-btn">Login</button>
+                    <button class="btn btn-primary" id="register-btn">Sign Up</button>
+                    <button class="btn btn-secondary hidden" id="logout-btn">Logout</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>Freshly Baked Cookies Delivered to You</h1>
+            <p>Indulge in our delicious, handcrafted cookies made with the finest ingredients and baked to perfection.</p>
+            <div class="hero-buttons" style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+                <a href="#menu" class="btn btn-primary btn-large">Order Now</a>
+                <a href="#vision-mission" class="btn btn-vm btn-large">Vision &amp; Mission</a>
+                <a href="#about" class="btn btn-secondary btn-large">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section class="section" id="menu">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our Cookie Selection</h2>
+                <p>Choose from our wide variety of freshly baked cookies</p>
+            </div>
+            <div class="cookies-grid" id="cookies-grid">
+                <!-- Cookies will be dynamically loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Panel (Visible only to Admin) -->
+    <section class="section hidden" id="admin-panel-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Admin Dashboard</h2>
+                <p>Manage users, menu items, and orders</p>
+            </div>
+            <div class="admin-panel">
+                <div class="admin-tabs">
+                    <button class="admin-tab active" data-tab="users">Users</button>
+                    <button class="admin-tab" data-tab="menu">Menu Management</button>
+                    <button class="admin-tab" data-tab="orders">Orders</button>
+                </div>
+               
+                <div class="admin-content active" id="users-tab">
+                    <h3>User Management</h3>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Registration Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body">
+                            <!-- Users will be dynamically loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+               
+                <div class="admin-content" id="menu-tab">
+                    <h3>Menu Management</h3>
+                    <button class="btn btn-primary" id="add-cookie-btn">Add New Cookie</button>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Price</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="menu-table-body">
+                            <!-- Menu items will be dynamically loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+               
+                <div class="admin-content" id="orders-tab">
+                    <h3>Order Management</h3>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Items</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-table-body">
+                            <!-- Orders will be dynamically loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Staff Panel (Visible only to Staff) -->
+    <section class="section hidden" id="staff-panel-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Staff Dashboard</h2>
+                <p>Manage orders and update order status</p>
+            </div>
+            <div class="staff-panel">
+                <h3>Recent Orders</h3>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="staff-orders-table-body">
+                        <!-- Orders for staff will be dynamically loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Customer Account / Order History (Visible to logged-in Customers) -->
+    <section class="section hidden" id="customer-account-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>My Account</h2>
+                <p>Your profile and order history</p>
+            </div>
+            <div style="margin-bottom: 1rem;">
+                <h3 id="account-welcome">Welcome, <span id="account-user-name">Customer</span></h3>
+                <p id="account-user-email" style="color: var(--secondary)"></p>
+            </div>
+
+            <div class="section-header" style="margin-top: 1rem;">
+                <h3>Order History</h3>
+                <p>Past orders you placed with Wink Bite</p>
+            </div>
+            <div class="orders-history">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Date</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="order-history-table-body">
+                        <!-- Customer orders will be rendered here -->
+                    </tbody>
+                </table>
+                <p id="no-orders-msg" style="display:none; margin-top: 1rem;">You have no orders yet.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section about" id="about">
+        <div class="container">
+            <div class="about-content" style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;">
+                <div class="about-text">
+                    <h2>Our Story</h2>
+                    <p>Wink Bite started as a small family bakery with a passion for creating the perfect cookie. Our founder, Maria, began baking cookies in her home kitchen, experimenting with recipes until she found the perfect balance of flavor and texture.</p>
+                    <p>Today, we continue to use Maria's original recipes, combining traditional techniques with high-quality ingredients to create cookies that are simply irresistible.</p>
+                    <p>Every cookie is baked fresh daily, ensuring that each bite delivers that perfect "wink" of satisfaction.</p>
+                    <a href="#contact" class="btn btn-primary">Visit Us</a>
+                </div>
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Baker preparing cookies" style="width: 100%; border-radius: var(--radius);">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vision & Mission Section -->
+    <section class="section" id="vision-mission">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our Vision & Mission</h2>
+                <p>Guiding principles that drive our passion for baking</p>
+            </div>
+            <div class="vm-container">
+                <div class="vm-card">
+                    <h4>Our Vision</h4>
+                    <p>To become the most beloved cookie brand worldwide, known for creating moments of pure joy and satisfaction with every bite. We envision a world where our cookies bring smiles to faces and create lasting memories for families and friends.</p>
+                </div>
+                <div class="vm-card">
+                    <h4>Our Mission</h4>
+                    <p>To craft exceptional cookies using the finest ingredients, traditional baking methods, and innovative recipes that delight our customers. We are committed to sustainability, community engagement, and spreading happiness one cookie at a time.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section" id="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2>Visit Our Bakery</h2>
+                <p>Come see us in person and experience the aroma of freshly baked cookies!</p>
+            </div>
+            <div class="contact-content">
+                <div>
+                    <h3>Location & Hours</h3>
+                    <p><i class="fas fa-map-marker-alt" style="margin-right: 10px;"></i> 123 Sweet Street, Cookieville</p>
+                    <p><i class="fas fa-phone" style="margin-right: 10px;"></i> (555) 123-4567</p>
+                    <p><i class="fas fa-envelope" style="margin-right: 10px;"></i> hello@winkbite.com</p>
+                    <br>
+                    <p><strong>Hours:</strong></p>
+                    <p>Monday - Friday: 8am - 8pm</p>
+                    <p>Saturday: 9am - 9pm</p>
+                    <p>Sunday: 10am - 6pm</p>
+                </div>
+                <div>
+                    <h3>Send Us a Message</h3>
+                    <form id="contact-form">
+                        <div class="form-group">
+                            <label for="contact-name">Name</label>
+                            <input type="text" id="contact-name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-email">Email</label>
+                            <input type="email" id="contact-email" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-message">Message</label>
+                            <textarea id="contact-message" class="form-control" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Wink Bite</h3>
+                    <p>Freshly baked cookies made with love and the finest ingredients. Perfect for any occasion!</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#menu">Menu</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact Info</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Sweet Street, Cookieville</li>
+                        <li><i class="fas fa-phone"></i> (555) 123-4567</li>
+                        <li><i class="fas fa-envelope"></i> hello@winkbite.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Wink Bite Cookies. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Sidebar -->
+    <aside id="cart-sidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h3>Your Cart</h3>
+            <button id="close-cart" class="close-modal">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="cart-body" id="cart-body">
+            <p>Your cart is empty</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">Total: <span id="cart-total-amount">₱0.00</span></div>
+            <button class="btn btn-primary" id="checkout-btn" style="width: 100%;" disabled>Proceed to Checkout</button>
+        </div>
+    </aside>
+
+    <!-- Login Modal -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Login to Your Account</h3>
+                <button class="close-modal" id="close-login">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+            </form>
+            <p class="text-center" style="margin-top: 1rem;">
+                Don't have an account? <a href="#" id="switch-to-register">Register here</a>
+            </p>
+            <div class="demo-accounts" style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--gray);">
+                <p style="font-size: 0.9rem; color: var(--secondary); margin-bottom: 0.5rem;">Demo Accounts:</p>
+                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <button type="button" class="btn btn-secondary demo-login" data-email="admin@winkbite.com" data-password="admin123">Login as Admin</button>
+                    <button type="button" class="btn btn-secondary demo-login" data-email="staff@winkbite.com" data-password="staff123">Login as Staff</button>
+                    <button type="button" class="btn btn-secondary demo-login" data-email="customer@example.com" data-password="customer123">Login as Customer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="register-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create an Account</h3>
+                <button class="close-modal" id="close-register">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="register-name">Full Name</label>
+                    <input type="text" id="register-name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Password</label>
+                    <input type="password" id="register-password" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-confirm">Confirm Password</label>
+                    <input type="password" id="register-confirm" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Register</button>
+            </form>
+            <p class="text-center" style="margin-top: 1rem;">
+                Already have an account? <a href="#" id="switch-to-login">Login here</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal" id="payment-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Complete Your Order</h3>
+                <button class="close-modal" id="close-payment">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="order-summary" style="margin-bottom: 1.5rem;">
+                <h4>Order Summary</h4>
+                <div id="order-items-list" style="margin: 1rem 0;">
+                    <!-- Order items will be dynamically loaded here -->
+                </div>
+                <div class="cart-total">Total: <span id="payment-total-amount">₱0.00</span></div>
+            </div>
+            <form id="payment-form">
+                <div class="form-group">
+                    <label for="customer-name">Your Name</label>
+                    <input type="text" id="customer-name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="customer-phone">Phone Number</label>
+                    <input type="tel" id="customer-phone" class="form-control" required placeholder="0912 345 6789">
+                </div>
+                <div class="form-group">
+                    <label for="delivery-address">Delivery Address</label>
+                    <textarea id="delivery-address" class="form-control" rows="3" required placeholder="Enter your complete delivery address"></textarea>
+                </div>
+               
+                <div class="form-group">
+                    <label for="payment-method">Payment Method</label>
+                    <div class="payment-methods">
+                        <div class="payment-option">
+                            <input type="radio" id="gcash" name="payment-method" value="gcash" checked>
+                            <label for="gcash">
+                                <i class="fas fa-mobile-alt"></i>
+                                <span>GCash</span>
+                            </label>
+                        </div>
+                        <div class="payment-option">
+                            <input type="radio" id="credit-card" name="payment-method" value="credit_card">
+                            <label for="credit-card">
+                                <i class="fas fa-credit-card"></i>
+                                <span>Credit Card</span>
+                            </label>
+                        </div>
+                        <div class="payment-option">
+                            <input type="radio" id="cod" name="payment-method" value="cash_on_delivery">
+                            <label for="cod">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <span>Cash on Delivery</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GCash Details -->
+                <div id="gcash-details" class="payment-details active">
+                    <div class="form-group">
+                        <label for="gcash-number">GCash Mobile Number</label>
+                        <input type="text" id="gcash-number" class="form-control" placeholder="0912 345 6789">
+                    </div>
+                    <div class="form-group">
+                        <label for="gcash-name">Account Name</label>
+                        <input type="text" id="gcash-name" class="form-control" placeholder="Juan Dela Cruz">
+                    </div>
+                </div>
+
+                <!-- Credit Card Details -->
+                <div id="credit-card-details" class="payment-details">
+                    <div class="form-group">
+                        <label for="card-number">Card Number</label>
+                        <input type="text" id="card-number" class="form-control" placeholder="1234 5678 9012 3456">
+                    </div>
+                    <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div>
+                            <label for="expiry-date">Expiry Date</label>
+                            <input type="text" id="expiry-date" class="form-control" placeholder="MM/YY">
+                        </div>
+                        <div>
+                            <label for="cvv">CVV</label>
+                            <input type="text" id="cvv" class="form-control" placeholder="123">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="card-name">Name on Card</label>
+                        <input type="text" id="card-name" class="form-control" placeholder="Juan Dela Cruz">
+                    </div>
+                </div>
+
+                <!-- Cash on Delivery Details -->
+                <div id="cod-details" class="payment-details">
+                    <div style="background: var(--light); padding: 15px; border-radius: var(--radius);">
+                        <p><strong>Cash on Delivery Instructions:</strong></p>
+                        <ul style="margin: 10px 0; padding-left: 20px;">
+                            <li>Pay when your order arrives</li>
+                            <li>Have exact amount ready</li>
+                            <li>Our delivery person will provide official receipt</li>
+                            <li>Delivery within 30-45 minutes</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-label" style="display: flex; align-items: center; gap: 10px;">
+                        <input type="checkbox" id="terms-agreement" required>
+                        I agree to the <a href="#" onclick="showTerms()">terms and conditions</a>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-lock"></i> Place Order
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Order Confirmation Modal -->
+    <div class="modal" id="order-confirmation-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Order Confirmed! 🎉</h3>
+                <button class="close-modal" id="close-confirmation">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div style="text-align: center; padding: 1rem 0;">
+                <div style="font-size: 4rem; color: var(--primary); margin-bottom: 1rem;">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h4>Thank you for your order!</h4>
+                <div style="background: var(--light); padding: 1.5rem; border-radius: var(--radius); margin: 1.5rem 0; text-align: left;">
+                    <p><strong>Order #:</strong> <span id="confirmed-order-id"></span></p>
+                    <p><strong>Total Amount:</strong> <span id="confirmed-order-total"></span></p>
+                    <p><strong>Payment Method:</strong> <span id="confirmed-payment-method"></span></p>
+                    <p><strong>Estimated Delivery:</strong> 30-45 minutes</p>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                    <button class="btn btn-primary" onclick="closeOrderConfirmation()">
+                        Continue Shopping
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Track Order Modal -->
+    <div class="modal" id="track-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Track Your Order</h3>
+                <button class="close-modal" id="close-track">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="track-form">
+                <div class="form-group">
+                    <label for="track-id">Order ID or Tracking Number</label>
+                    <input type="text" id="track-id" class="form-control" placeholder="#1001 or 1001" required>
+                </div>
+                <div style="display:flex; gap:10px;">
+                    <button type="submit" class="btn btn-primary">Check Status</button>
+                    <button type="button" class="btn btn-secondary" id="clear-track">Clear</button>
+                </div>
+            </form>
+
+            <div id="track-result" style="margin-top:1.2rem; display:none;">
+                <div class="track-steps" id="track-steps"></div>
+                <div class="track-progress" style="margin-top:12px;">
+                    <div class="bar" id="track-progress-bar"></div>
+                </div>
+                <div class="track-meta" id="track-meta"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <script>
+        // Application Data
+        const cookies = [
+            {
+                id: 1,
+                name: "OG Choco Chunk",
+                description: "The timeless favorite — golden dough packed with melty chocolate chunks.",
+                price: 149.50,
+                image: "https://i.pinimg.com/736x/5b/5d/80/5b5d806fecae327a9ce08eee090f2d81.jpg",
+                category: "Classic",
+                available: true
+            },
+            {
+                id: 2,
+                name: "Ultimate Choco Overload",
+                description: "For true chocoholics — rich cocoa cookie packed with chocolate chunks.",
+                price: 174.50,
+                image: "https://i.pinimg.com/736x/1e/7c/6f/1e7c6fd36ca0d60ebcffd6abb91dfa95.jpg",
+                category: "Chocolate",
+                available: true
+            },
+            {
+                id: 3,
+                name: "Golden Harvest Cookie",
+                description: "Hearty oats, juicy raisins, and a hint of cinnamon warmth in every bite.",
+                price: 139.50,
+                image: "https://i.pinimg.com/736x/16/b6/21/16b621867de239b4dfd83bc3f7200f31.jpg",
+                category: "Classic",
+                available: true
+            },
+            {
+                id: 4,
+                name: "Nutty Butter Dream",
+                description: "Creamy peanut butter cookie with the perfect crisscross crunch.",
+                price: 164.50,
+                image: "https://i.pinimg.com/736x/c4/1d/85/c41d85daf31fb13bd0fba23d81f9a434.jpg",
+                category: "Nutty",
+                available: true
+            },
+            {
+                id: 5,
+                name: "Sprinkle Sweetheart",
+                description: "Soft, buttery sugar cookie topped with colorful sprinkles and icing fun.",
+                price: 124.50,
+                image: "https://i.pinimg.com/736x/18/6c/2b/186c2b78ee521547b45b9bc3ddf42211.jpg",
+                category: "Decorated",
+                available: true
+            },
+            {
+                id: 6,
+                name: "Scarlet Velvet Indulgence",
+                description: "Lush red velvet cookie filled with creamy cheesecake flavor.",
+                price: 199.50,
+                image: "https://i.pinimg.com/736x/70/8d/f7/708df7d6a2525b830be88f49fe1e1ea5.jpg",
+                category: "Specialty",
+                available: true
+            },
+            {
+                id: 7,
+                name: "Campfire Bliss",
+                description: "Toasty marshmallow, gooey chocolate, and crispy cookie magic — the campfire treat in every bite.",
+                price: 179.00,
+                image: "https://i.pinimg.com/736x/c0/cf/0e/c0cf0ea23225a98a5edd1503fabeac9d.jpg",
+                category: "Seasonal",
+                available: true
+            },
+            {
+                id: 8,
+                name: "Sunshine Lemon Kiss",
+                description: "Buttery shortbread bursting with bright, tangy lemon zest for a refreshing twist.",
+                price: 129.00,
+                image: "https://i.pinimg.com/736x/6f/28/0c/6f280cab40ab113683b951fb8055495e.jpg",
+                category: "Citrus",
+                available: true
+            },
+            {
+                id: 9,
+                name: "Caramel Dream Crunch",
+                description: "Sweet ribbons of caramel and crunchy toffee — the perfect salty-sweet delight.",
+                price: 189.50,
+                image: "https://i.pinimg.com/736x/af/2e/93/af2e93e6b29d9bc7287bea1b319f06e5.jpg",
+                category: "Caramel",
+                available: true
+            },
+            {
+                id: 10,
+                name: "Snowy Nut Bliss",
+                description: "Creamy white chocolate meets roasted macadamia nuts in a soft, decadent cookie.",
+                price: 179.50,
+                image: "https://i.pinimg.com/1200x/2b/cb/43/2bcb4347eacad7132d3230f620d9b871.jpg",
+                category: "Nutty",
+                available: true
+            },
+            {
+                id: 12,
+                name: "Mint Chocolate Chip",
+                description: "Refreshing mint combined with dark chocolate chips",
+                price: 159.50,
+                image: "https://i.pinimg.com/736x/6a/c7/1b/6ac71b13ad9fd9e92afc8b71dff51724.jpg",
+                category: "Chocolate",
+                available: true
+            },
+            {
+                id: 13,
+                name: "ChocoMint Fantasy",
+                description: "Cool mint and dark chocolate collide in this irresistibly refreshing cookie.",
+                price: 119.50,
+                image: "https://i.pinimg.com/736x/a0/ff/18/a0ff1822176a12d6d92682c6cb1aef10.jpg",
+                category: "Biscotti",
+                available: true
+            },
+            {
+                id: 14,
+                name: "Berry Crumble Bliss",
+                description: "Sweet strawberry jam and buttery oat crumble — fruity, fun, and fabulous.",
+                price: 154.00,
+                image: "https://i.pinimg.com/736x/c2/ac/7d/c2ac7df9d56473791597c130ef390bc7.jpg",
+                category: "Fruit",
+                available: true
+            },
+            {
+                id: 15,
+                name: "Zen Matcha Delight",
+                description: "Earthy matcha cookies blended with white chocolate for calm indulgence.",
+                price: 169.50,
+                image: "https://i.pinimg.com/736x/bb/f7/cd/bbf7cd053e828d661ccc8dcfac623730.jpg",
+                category: "Specialty",
+                available: true
+            },
+            {
+                id: 16,
+                name: "Blueberry Cloud Cookie",
+                description: "Soft cheesecake-style cookie topped with rich blueberry compote.",
+                price: 189.00,
+                image: "https://i.pinimg.com/736x/eb/0b/c4/eb0bc4930a3ae0f4faf45f4f653065d7.jpg",
+                category: "Dessert",
+                available: true
+            }
+        ];
+
+        // Sample users with hashed passwords (in a real app, passwords would be properly hashed on the server)
+        const users = [
+            { id: 1, name: "Admin User", email: "admin@winkbite.com", password: "admin123", role: "admin", registered: "2023-01-01" },
+            { id: 2, name: "Staff Member", email: "staff@winkbite.com", password: "staff123", role: "staff", registered: "2023-02-01" },
+            { id: 3, name: "John Customer", email: "customer@example.com", password: "customer123", role: "customer", registered: "2023-03-01" }
+        ];
+
+        // Orders storage
+        let orders = [];
+        let userOrders = {};
+
+        // Application State
+        let cart = [];
+        let currentUser = null;
+        let nextOrderId = 1001;
+
+        // DOM Elements
+        const cookiesGrid = document.getElementById('cookies-grid');
+        const cartIcon = document.getElementById('cart-icon');
+        const cartSidebar = document.getElementById('cart-sidebar');
+        const cartBody = document.getElementById('cart-body');
+        const cartTotalAmount = document.getElementById('cart-total-amount');
+        const cartCount = document.getElementById('cart-count');
+        const checkoutBtn = document.getElementById('checkout-btn');
+        const closeCart = document.getElementById('close-cart');
+        const loginBtn = document.getElementById('login-btn');
+        const registerBtn = document.getElementById('register-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const loginModal = document.getElementById('login-modal');
+        const registerModal = document.getElementById('register-modal');
+        const paymentModal = document.getElementById('payment-modal');
+        const orderConfirmationModal = document.getElementById('order-confirmation-modal');
+        const closeLogin = document.getElementById('close-login');
+        const closeRegister = document.getElementById('close-register');
+        const closePayment = document.getElementById('close-payment');
+        const closeConfirmation = document.getElementById('close-confirmation');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const paymentForm = document.getElementById('payment-form');
+        const switchToRegister = document.getElementById('switch-to-register');
+        const switchToLogin = document.getElementById('switch-to-login');
+        const overlay = document.getElementById('overlay');
+        const userInfo = document.getElementById('user-info');
+        const userName = document.getElementById('user-name');
+        const userRole = document.getElementById('user-role');
+        const adminPanelSection = document.getElementById('admin-panel-section');
+        const staffPanelSection = document.getElementById('staff-panel-section');
+    const myOrdersBtn = document.getElementById('my-orders-btn');
+    const customerAccountSection = document.getElementById('customer-account-section');
+        const menuSection = document.getElementById('menu');
+        const aboutSection = document.getElementById('about');
+        const visionMissionSection = document.getElementById('vision-mission');
+        const contactSection = document.getElementById('contact');
+        const heroSection = document.getElementById('home');
+    const navLinks = document.querySelector('.nav-links');
+    const publicNavLinks = navLinks ? navLinks.querySelectorAll('a[href="#about"], a[href="#contact"]') : [];
+    const homeLink = document.querySelector('a[href="#home"]');
+    const menuLink = document.querySelector('a[href="#menu"]');
+        const heroButtons = document.querySelector('.hero-buttons');
+        const trackOrderBtn = document.getElementById('track-order-btn');
+        const paymentMethods = document.querySelectorAll('input[name="payment-method"]');
+        const demoLoginButtons = document.querySelectorAll('.demo-login');
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load data from localStorage
+            loadDataFromLocalStorage();
+           
+            // Render initial UI
+            renderCookies();
+            updateCartUI();
+            checkAuthStatus();
+            setupAdminTabs();
+            renderUsersTable();
+            renderMenuTable();
+            renderOrdersTable();
+            renderStaffOrdersTable();
+
+            // Add event listeners
+            cartIcon.addEventListener('click', toggleCart);
+            closeCart.addEventListener('click', toggleCart);
+            overlay.addEventListener('click', closeAllModals);
+            loginBtn.addEventListener('click', () => openModal(loginModal));
+            registerBtn.addEventListener('click', () => openModal(registerModal));
+            logoutBtn.addEventListener('click', logout);
+            closeLogin.addEventListener('click', () => closeModal(loginModal));
+            closeRegister.addEventListener('click', () => closeModal(registerModal));
+            closePayment.addEventListener('click', () => closeModal(paymentModal));
+            closeConfirmation.addEventListener('click', closeOrderConfirmation);
+            switchToRegister.addEventListener('click', (e) => {
+                e.preventDefault();
+                closeModal(loginModal);
+                openModal(registerModal);
+            });
+            switchToLogin.addEventListener('click', (e) => {
+                e.preventDefault();
+                closeModal(registerModal);
+                openModal(loginModal);
+            });
+            loginForm.addEventListener('submit', handleLogin);
+            registerForm.addEventListener('submit', handleRegister);
+            checkoutBtn.addEventListener('click', openPaymentModal);
+            paymentForm.addEventListener('submit', processPayment);
+           
+            // Payment method change handler
+            paymentMethods.forEach(method => {
+                method.addEventListener('change', function() {
+                    updatePaymentDetails(this.value);
+                });
+            });
+           
+            // Demo login buttons
+            demoLoginButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const email = this.getAttribute('data-email');
+                    const password = this.getAttribute('data-password');
+                    document.getElementById('login-email').value = email;
+                    document.getElementById('login-password').value = password;
+                    handleLogin(new Event('submit'));
+                });
+            });
+
+            // My Orders button - open Customer Account / Order History
+            if (myOrdersBtn) {
+                myOrdersBtn.addEventListener('click', function() {
+                    // if the section exists, scroll to it and ensure it's visible
+                    if (customerAccountSection) {
+                        // ensure the section is shown
+                        customerAccountSection.classList.remove('hidden');
+                        // scroll into view
+                        customerAccountSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        // render latest orders
+                        renderOrderHistory();
+                    }
+                });
+            }
+
+            // Contact form
+            document.getElementById('contact-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Thank you for your message! We will get back to you soon.');
+                this.reset();
+            });
+
+            // Add smooth scrolling for Vision & Mission button
+            document.querySelector('a[href="#vision-mission"]').addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetElement = document.getElementById('vision-mission');
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+            // Render order history (if any) for current user on load
+            if (typeof renderOrderHistory === 'function') renderOrderHistory();
+        });
+
+        // Render cookies to the page
+        function renderCookies() {
+            cookiesGrid.innerHTML = cookies.map(cookie => `
+                <div class="cookie-card">
+                    <img src="${cookie.image}" alt="${cookie.name}" class="cookie-image">
+                    <div class="cookie-content">
+                        <h3>${cookie.name}</h3>
+                        <p>${cookie.description}</p>
+                        <div class="cookie-price">₱${cookie.price.toFixed(2)}</div>
+                        <div class="cookie-actions">
+                            <div class="quantity-selector">
+                                <button class="quantity-btn minus" data-id="${cookie.id}">-</button>
+                                <span class="quantity" id="quantity-${cookie.id}">0</span>
+                                <button class="quantity-btn plus" data-id="${cookie.id}">+</button>
+                            </div>
+                            <button class="btn btn-primary add-to-cart" data-id="${cookie.id}">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+           
+            // Add event listeners to the dynamically created buttons
+            document.querySelectorAll('.add-to-cart').forEach(button => {
+                button.addEventListener('click', function() {
+                    const cookieId = parseInt(this.getAttribute('data-id'));
+                    let quantity = parseInt(document.getElementById(`quantity-${cookieId}`).textContent) || 0;
+                    // if user didn't set quantity, default to 1 when adding to cart
+                    quantity = Math.max(1, quantity);
+                    addToCart(cookieId, quantity);
+                });
+            });
+           
+            document.querySelectorAll('.quantity-btn.plus').forEach(button => {
+                button.addEventListener('click', function() {
+                    const cookieId = parseInt(this.getAttribute('data-id'));
+                    const quantityElement = document.getElementById(`quantity-${cookieId}`);
+                    if (quantityElement) {
+                        quantityElement.textContent = parseInt(quantityElement.textContent) + 1;
+                    }
+                });
+            });
+           
+            document.querySelectorAll('.quantity-btn.minus').forEach(button => {
+                button.addEventListener('click', function() {
+                    const cookieId = parseInt(this.getAttribute('data-id'));
+                    const quantityElement = document.getElementById(`quantity-${cookieId}`);
+                    if (!quantityElement) return;
+                    const val = parseInt(quantityElement.textContent) || 0;
+                    if (val > 0) {
+                        quantityElement.textContent = val - 1;
+                    }
+                });
+            });
+        }
+
+        // Cart functions
+        function addToCart(cookieId, quantity) {
+            quantity = Math.max(1, parseInt(quantity) || 1);
+            const cookie = cookies.find(c => c.id === cookieId);
+            if (!cookie) return;
+           
+            const existingItem = cart.find(item => item.id === cookieId);
+           
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({
+                    id: cookie.id,
+                    name: cookie.name,
+                    price: cookie.price,
+                    image: cookie.image,
+                    quantity: quantity
+                });
+            }
+           
+            updateCartUI();
+            showNotification(`${cookie.name} added to cart!`);
+            saveDataToLocalStorage();
+        }
+
+        function removeFromCart(cookieId) {
+            cart = cart.filter(item => item.id !== cookieId);
+            updateCartUI();
+            saveDataToLocalStorage();
+        }
+
+        function updateCartItemQuantity(cookieId, change) {
+            const item = cart.find(item => item.id === cookieId);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    removeFromCart(cookieId);
+                } else {
+                    updateCartUI();
+                    saveDataToLocalStorage();
+                }
+            }
+        }
+
+        function updateCartUI() {
+            // Update cart count
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = totalItems;
+           
+            // Update cart body
+            if (cart.length === 0) {
+                cartBody.innerHTML = '<p>Your cart is empty</p>';
+                checkoutBtn.disabled = true;
+            } else {
+                cartBody.innerHTML = cart.map(item => `
+                    <div class="cart-item">
+                        <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+                        <div class="cart-item-details">
+                            <h4>${item.name}</h4>
+                            <p>₱${item.price.toFixed(2)}</p>
+                            <div class="cart-item-actions">
+                                <button class="quantity-btn minus" data-id="${item.id}">-</button>
+                                <span>${item.quantity}</span>
+                                <button class="quantity-btn plus" data-id="${item.id}">+</button>
+                                <button class="btn btn-link remove" data-id="${item.id}">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+               
+                checkoutBtn.disabled = false;
+               
+                // Add event listeners to cart item buttons
+                cartBody.querySelectorAll('.quantity-btn.plus').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const cookieId = parseInt(this.getAttribute('data-id'));
+                        updateCartItemQuantity(cookieId, 1);
+                    });
+                });
+               
+                cartBody.querySelectorAll('.quantity-btn.minus').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const cookieId = parseInt(this.getAttribute('data-id'));
+                        updateCartItemQuantity(cookieId, -1);
+                    });
+                });
+               
+                cartBody.querySelectorAll('.remove').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const cookieId = parseInt(this.getAttribute('data-id'));
+                        removeFromCart(cookieId);
+                    });
+                });
+            }
+           
+            // Update total
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            cartTotalAmount.textContent = `₱${total.toFixed(2)}`;
+        }
+
+        function toggleCart() {
+            cartSidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        // Authentication functions
+        function checkAuthStatus() {
+            const token = localStorage.getItem('authToken');
+            if (token) {
+                const userData = JSON.parse(localStorage.getItem('userData'));
+                if (userData) {
+                    currentUser = userData;
+                    updateAuthUI();
+                }
+            }
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+           
+            const user = users.find(u => u.email === email && u.password === password);
+            if (user) {
+                currentUser = {
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    role: user.role
+                };
+               
+                // Store auth token and user data in localStorage
+                localStorage.setItem('authToken', 'mock-jwt-token');
+                localStorage.setItem('userData', JSON.stringify(currentUser));
+
+                updateAuthUI();
+                closeModal(loginModal);
+                showNotification('Login successful!');
+                loginForm.reset();
+            } else {
+                showNotification('Invalid email or password', 'error');
+            }
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirm = document.getElementById('register-confirm').value;
+           
+            if (password !== confirm) {
+                showNotification('Passwords do not match', 'error');
+                return;
+            }
+           
+            // Check if user already exists
+            if (users.find(u => u.email === email)) {
+                showNotification('User with this email already exists', 'error');
+                return;
+            }
+           
+            // Create new user
+            const newUser = {
+                id: users.length + 1,
+                name: name,
+                email: email,
+                password: password,
+                role: 'customer',
+                registered: new Date().toISOString().split('T')[0]
+            };
+           
+            users.push(newUser);
+            currentUser = {
+                id: newUser.id,
+                name: newUser.name,
+                email: newUser.email,
+                role: newUser.role
+            };
+               
+            // Store auth token and user data in localStorage
+            localStorage.setItem('authToken', 'mock-jwt-token');
+            localStorage.setItem('userData', JSON.stringify(currentUser));
+               
+            updateAuthUI();
+            closeModal(registerModal);
+            showNotification('Registration successful!');
+            registerForm.reset();
+            saveDataToLocalStorage();
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userData');
+            updateAuthUI();
+            showNotification('Logged out successfully');
+        }
+
+        function updateAuthUI() {
+            if (currentUser) {
+                loginBtn.classList.add('hidden');
+                registerBtn.classList.add('hidden');
+                logoutBtn.classList.remove('hidden');
+                userInfo.classList.remove('hidden');
+               
+                userName.textContent = currentUser.name;
+                userRole.textContent = currentUser.role;
+                userRole.className = 'user-role ' + currentUser.role;
+               
+                // Show/hide admin and staff panels based on role
+                if (currentUser.role === 'admin') {
+                    adminPanelSection.classList.remove('hidden');
+                    staffPanelSection.classList.add('hidden');
+                    // hide customer account section for admin
+                    if (customerAccountSection) customerAccountSection.classList.add('hidden');
+                    if (myOrdersBtn) myOrdersBtn.style.display = 'none';
+                    // hide public menu and cart for admin/staff
+                    if (menuSection) menuSection.classList.add('hidden');
+                    if (cartIcon) cartIcon.classList.add('hidden');
+                    if (cookiesGrid) cookiesGrid.innerHTML = '';
+                    // hide hero action buttons for admin
+                    if (heroButtons) heroButtons.style.display = 'none';
+                    // hide about/contact sections for admin
+                    if (aboutSection) aboutSection.classList.add('hidden');
+                    if (visionMissionSection) visionMissionSection.classList.add('hidden');
+                    if (contactSection) contactSection.classList.add('hidden');
+                    // hide top navigation links (Home, Menu, About, Contact) for admin
+                    if (homeLink) homeLink.style.display = 'none';
+                    if (menuLink) menuLink.style.display = 'none';
+                    if (publicNavLinks) publicNavLinks.forEach(link => link.style.display = 'none');
+                } else if (currentUser.role === 'staff') {
+                    adminPanelSection.classList.add('hidden');
+                    staffPanelSection.classList.remove('hidden');
+                    // hide customer account section for staff
+                    if (customerAccountSection) customerAccountSection.classList.add('hidden');
+                    if (myOrdersBtn) myOrdersBtn.style.display = 'none';
+                    if (menuSection) menuSection.classList.add('hidden');
+                    if (cartIcon) cartIcon.classList.add('hidden');
+                    if (cookiesGrid) cookiesGrid.innerHTML = '';
+                    // hide about/contact sections for staff but show hero area
+                    if (aboutSection) aboutSection.classList.add('hidden');
+                    if (visionMissionSection) visionMissionSection.classList.add('hidden');
+                    if (contactSection) contactSection.classList.add('hidden');
+                    // show hero section but hide hero action buttons for staff
+                    if (heroSection) heroSection.classList.remove('hidden');
+                    if (heroButtons) heroButtons.style.display = 'none';
+                    // hide navigation links and track order button (but keep home/menu hidden)
+                    const homeLink = document.querySelector('a[href="#home"]');
+                    const menuLink = document.querySelector('a[href="#menu"]');
+                    if (homeLink) homeLink.style.display = 'none';
+                    if (menuLink) menuLink.style.display = 'none';
+                    if (publicNavLinks) publicNavLinks.forEach(link => link.style.display = 'none');
+                    if (trackOrderBtn) trackOrderBtn.classList.add('hidden');
+                    // give the staff panel a subtle gradient background while staff is active
+                    if (staffPanelSection) staffPanelSection.style.background = 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)';
+                } else {
+                    adminPanelSection.classList.add('hidden');
+                    staffPanelSection.classList.add('hidden');
+                    // show customer-specific account UI
+                    if (customerAccountSection) customerAccountSection.classList.remove('hidden');
+                    if (myOrdersBtn) myOrdersBtn.style.display = '';
+                    if (menuSection) menuSection.classList.remove('hidden');
+                    if (cartIcon) cartIcon.classList.remove('hidden');
+                    // show about/vision/contact sections for customers
+                    if (aboutSection) aboutSection.classList.remove('hidden');
+                    if (visionMissionSection) visionMissionSection.classList.remove('hidden');
+                    if (contactSection) contactSection.classList.remove('hidden');
+                    // show hero section and nav links
+                    if (heroSection) heroSection.classList.remove('hidden');
+                    if (heroButtons) heroButtons.style.display = '';
+                    if (publicNavLinks) publicNavLinks.forEach(link => link.style.display = '');
+                    if (homeLink) homeLink.style.display = '';
+                    if (menuLink) menuLink.style.display = '';
+                    // reset staff panel background to default for non-staff
+                    if (staffPanelSection) staffPanelSection.style.background = '';
+                    // re-render cookies so the customer can order
+                    renderCookies();
+                }
+            } else {
+                loginBtn.classList.remove('hidden');
+                registerBtn.classList.remove('hidden');
+                logoutBtn.classList.add('hidden');
+                userInfo.classList.add('hidden');
+                adminPanelSection.classList.add('hidden');
+                staffPanelSection.classList.add('hidden');
+                if (customerAccountSection) customerAccountSection.classList.add('hidden');
+                if (myOrdersBtn) myOrdersBtn.style.display = 'none';
+                if (menuSection) menuSection.classList.remove('hidden');
+                if (cartIcon) cartIcon.classList.remove('hidden');
+                if (aboutSection) aboutSection.classList.remove('hidden');
+                if (visionMissionSection) visionMissionSection.classList.remove('hidden');
+                if (contactSection) contactSection.classList.remove('hidden');
+                if (heroSection) heroSection.classList.remove('hidden');
+                if (heroButtons) heroButtons.style.display = '';
+                if (publicNavLinks) publicNavLinks.forEach(link => link.style.display = '');
+                if (homeLink) homeLink.style.display = '';
+                if (menuLink) menuLink.style.display = '';
+                if (staffPanelSection) staffPanelSection.style.background = '';
+                renderCookies();
+            }
+        }
+
+        // Admin panel functions
+        function setupAdminTabs() {
+            const tabs = document.querySelectorAll('.admin-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    // Hide all content
+                    document.querySelectorAll('.admin-content').forEach(c => c.classList.remove('active'));
+                   
+                    // Activate clicked tab
+                    this.classList.add('active');
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                });
+            });
+        }
+
+        function renderUsersTable() {
+            const tbody = document.getElementById('users-table-body');
+            tbody.innerHTML = users.map(user => `
+                <tr>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>
+                        <span class="user-role ${user.role}">${user.role}</span>
+                    </td>
+                    <td>${user.registered}</td>
+                    <td>
+                        <button class="btn btn-secondary edit-user-btn" data-id="${user.id}">Edit</button>
+                        <button class="btn btn-admin change-role-btn" data-id="${user.id}">Change Role</button>
+                    </td>
+                </tr>
+            `).join('');
+
+            // Wire up Edit buttons
+            document.querySelectorAll('.edit-user-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const userId = parseInt(this.getAttribute('data-id'));
+                    const user = users.find(u => u.id === userId);
+                    if (!user) return;
+
+                    const newName = prompt('Edit name for user:', user.name);
+                    if (newName !== null && newName.trim() !== '') {
+                        user.name = newName.trim();
+                    }
+
+                    const newEmail = prompt('Edit email for user:', user.email);
+                    if (newEmail !== null && newEmail.trim() !== '') {
+                        user.email = newEmail.trim();
+                    }
+
+                    renderUsersTable();
+                    showNotification('User updated');
+                    saveDataToLocalStorage();
+                });
+            });
+
+            // Wire up Change Role buttons
+            document.querySelectorAll('.change-role-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const userId = parseInt(this.getAttribute('data-id'));
+                    const user = users.find(u => u.id === userId);
+                    if (!user) return;
+
+                    const newRole = prompt(`Change role for ${user.name} (customer, staff, admin):`, user.role);
+                    if (!newRole) return;
+                    const normalized = newRole.trim().toLowerCase();
+                    const validRoles = ['customer', 'staff', 'admin'];
+                    if (!validRoles.includes(normalized)) {
+                        alert('Invalid role. Valid roles: customer, staff, admin');
+                        return;
+                    }
+
+                    user.role = normalized;
+                    // If this changed the currently-logged-in user, update UI
+                    if (currentUser && currentUser.email === user.email) {
+                        currentUser.role = normalized;
+                    }
+
+                    updateAuthUI();
+                    renderUsersTable();
+                    showNotification(`Role updated for ${user.name} → ${normalized}`);
+                    saveDataToLocalStorage();
+                });
+            });
+        }
+
+        function renderMenuTable() {
+            const tbody = document.getElementById('menu-table-body');
+            tbody.innerHTML = cookies.map(cookie => `
+                <tr>
+                    <td>${cookie.name}</td>
+                    <td>₱${cookie.price.toFixed(2)}</td>
+                    <td>${cookie.category}</td>
+                    <td>
+                        <span class="status-badge ${cookie.available ? 'status-completed' : 'status-pending'}">
+                            ${cookie.available ? 'Available' : 'Unavailable'}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-secondary menu-edit-btn" data-id="${cookie.id}">Edit</button>
+                        <button class="btn ${cookie.available ? 'btn-admin' : 'btn-secondary'} menu-toggle-btn" data-id="${cookie.id}">
+                            ${cookie.available ? 'Disable' : 'Enable'}
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+           
+            // Wire up Edit buttons
+            document.querySelectorAll('.menu-edit-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const cookieId = parseInt(this.getAttribute('data-id'));
+                    const cookie = cookies.find(c => c.id === cookieId);
+                    if (!cookie) return;
+
+                    const newName = prompt('Edit cookie name:', cookie.name);
+                    if (newName !== null && newName.trim() !== '') {
+                        cookie.name = newName.trim();
+                    }
+
+                    const newPrice = prompt('Edit cookie price:', cookie.price);
+                    if (newPrice !== null && !isNaN(parseFloat(newPrice))) {
+                        cookie.price = parseFloat(newPrice);
+                    }
+
+                    renderMenuTable();
+                    renderCookies();
+                    showNotification('Cookie updated');
+                    saveDataToLocalStorage();
+                });
+            });
+
+            // Wire up Toggle buttons
+            document.querySelectorAll('.menu-toggle-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const cookieId = parseInt(this.getAttribute('data-id'));
+                    const cookie = cookies.find(c => c.id === cookieId);
+                    if (!cookie) return;
+
+                    cookie.available = !cookie.available;
+                    renderMenuTable();
+                    renderCookies();
+                    showNotification(`${cookie.name} is now ${cookie.available ? 'Available' : 'Unavailable'}`);
+                    saveDataToLocalStorage();
+                });
+            });
+        }
+
+        function renderOrdersTable() {
+            const tbody = document.getElementById('orders-table-body');
+            tbody.innerHTML = orders.map(order => `
+                <tr>
+                    <td>#${order.id}</td>
+                    <td>${order.customerName}</td>
+                    <td>${order.items.map(item => `${item.quantity}x ${item.name}`).join(', ')}</td>
+                    <td>₱${order.total.toFixed(2)}</td>
+                    <td>
+                        <span class="status-badge status-${order.status}">${order.status}</span>
+                    </td>
+                    <td>${order.date}</td>
+                    <td>
+                        <button class="btn btn-secondary view-order-btn" data-id="${order.id}">View</button>
+                        <button class="btn btn-admin update-status-btn" data-id="${order.id}">Update Status</button>
+                    </td>
+                </tr>
+            `).join('');
+           
+            // Wire up View buttons
+            document.querySelectorAll('.view-order-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const orderId = parseInt(this.getAttribute('data-id'));
+                    const order = orders.find(o => o.id === orderId);
+                    if (!order) return;
+                   
+                    let itemsList = order.items.map(item =>
+                        `${item.quantity}x ${item.name} - ₱${(item.price * item.quantity).toFixed(2)}`
+                    ).join('\n');
+                   
+                    alert(`Order #${order.id}\nCustomer: ${order.customerName}\nPhone: ${order.customerPhone}\nAddress: ${order.deliveryAddress}\nItems:\n${itemsList}\nTotal: ₱${order.total.toFixed(2)}\nStatus: ${order.status}\nPayment: ${order.paymentMethod}`);
+                });
+            });
+           
+            // Wire up Update Status buttons
+            document.querySelectorAll('.update-status-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const orderId = parseInt(this.getAttribute('data-id'));
+                    const order = orders.find(o => o.id === orderId);
+                    if (!order) return;
+
+                    const newStatus = prompt(`Update status for order #${orderId} (pending, confirmed, preparing, ready, completed):`, order.status);
+                    if (!newStatus) return;
+                   
+                    const validStatuses = ['pending', 'confirmed', 'preparing', 'ready', 'completed'];
+                    if (!validStatuses.includes(newStatus)) {
+                        alert('Invalid status. Valid statuses: pending, confirmed, preparing, ready, completed');
+                        return;
+                    }
+                   
+                    order.status = newStatus;
+                   
+                    // Update user orders if exists
+                    if (userOrders[order.customerEmail]) {
+                        const userOrder = userOrders[order.customerEmail].find(o => o.id === orderId);
+                        if (userOrder) {
+                            userOrder.status = newStatus;
+                        }
+                    }
+                   
+                    renderOrdersTable();
+                    renderStaffOrdersTable();
+                    showNotification(`Order #${orderId} status updated to ${newStatus}`);
+                    saveDataToLocalStorage();
+                });
+            });
+        }
+
+        function renderStaffOrdersTable() {
+            const tbody = document.getElementById('staff-orders-table-body');
+            // Use a select control for staff so they can change status via dropdown
+            tbody.innerHTML = orders.map(order => `
+                <tr>
+                    <td>#${order.id}</td>
+                    <td>${order.customerName}</td>
+                    <td>${order.items.map(item => `${item.quantity}x ${item.name}`).join(', ')}</td>
+                    <td>₱${order.total.toFixed(2)}</td>
+                    <td>
+                        <span class="status-badge status-${order.status}">${order.status}</span>
+                    </td>
+                    <td>${order.date}</td>
+                            <td>
+                                <button class="btn btn-secondary view-order-btn" data-id="${order.id}">View</button>
+                                <button class="btn btn-staff update-status-btn" data-id="${order.id}">Update Status</button>
+                            </td>
+                </tr>
+            `).join('');
+
+            // Wire up View buttons
+            document.querySelectorAll('#staff-orders-table-body .view-order-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const orderId = parseInt(this.getAttribute('data-id'));
+                    const order = orders.find(o => o.id === orderId);
+                    if (!order) return;
+
+                    let itemsList = order.items.map(item =>
+                        `${item.quantity}x ${item.name} - ₱${(item.price * item.quantity).toFixed(2)}`
+                    ).join('\n');
+
+                    alert(`Order #${order.id}\nCustomer: ${order.customerName}\nPhone: ${order.customerPhone}\nAddress: ${order.deliveryAddress}\nItems:\n${itemsList}\nTotal: ₱${order.total.toFixed(2)}\nStatus: ${order.status}\nPayment: ${order.paymentMethod}`);
+                });
+            });
+
+            // Wire up Update Status buttons (also available for staff)
+            document.querySelectorAll('#staff-orders-table-body .update-status-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const orderId = parseInt(this.getAttribute('data-id'));
+                    const order = orders.find(o => o.id === orderId);
+                    if (!order) return;
+
+                    const newStatus = prompt(`Update status for order #${orderId} (pending, confirmed, preparing, ready):`, order.status);
+                    if (!newStatus) return;
+
+                    const validStatuses = ['pending', 'confirmed', 'preparing', 'ready'];
+                    if (!validStatuses.includes(newStatus)) {
+                        alert('Invalid status. Staff can only update to: pending, confirmed, preparing, ready');
+                        return;
+                    }
+
+                    order.status = newStatus;
+
+                    // Update user orders if exists
+                    if (userOrders[order.customerEmail]) {
+                        const userOrder = userOrders[order.customerEmail].find(o => o.id === orderId);
+                        if (userOrder) userOrder.status = newStatus;
+                    }
+
+                    renderOrdersTable();
+                    renderStaffOrdersTable();
+                    showNotification(`Order #${orderId} status updated to ${newStatus}`);
+                    saveDataToLocalStorage();
+                });
+            });
+
+            // (inline status dropdown removed — status updates handled via the Update Status button)
+        }
+
+        // Render order history for the currently logged-in customer
+        function renderOrderHistory() {
+            const tbody = document.getElementById('order-history-table-body');
+            const noOrdersMsg = document.getElementById('no-orders-msg');
+            const accountNameEl = document.getElementById('account-user-name');
+            const accountEmailEl = document.getElementById('account-user-email');
+
+            if (!tbody) return;
+
+            // Update account header info
+            if (accountNameEl) accountNameEl.textContent = currentUser ? currentUser.name : 'Guest';
+            if (accountEmailEl) accountEmailEl.textContent = currentUser ? currentUser.email : '';
+
+            if (!currentUser) {
+                tbody.innerHTML = '';
+                if (noOrdersMsg) {
+                    noOrdersMsg.style.display = '';
+                    noOrdersMsg.textContent = 'Please login to see your orders.';
+                }
+                return;
+            }
+
+            // Filter orders that belong to current user.
+            const filtered = orders.filter(o => {
+                // Try matching common properties that may exist on order objects
+                return (
+                    (o.userEmail && currentUser.email && o.userEmail === currentUser.email) ||
+                    (o.customerEmail && currentUser.email && o.customerEmail === currentUser.email) ||
+                    (o.userId && currentUser.id && o.userId === currentUser.id) ||
+                    (o.customerName && currentUser.name && o.customerName === currentUser.name)
+                );
+            });
+
+            if (!filtered || filtered.length === 0) {
+                tbody.innerHTML = '';
+                if (noOrdersMsg) {
+                    noOrdersMsg.style.display = '';
+                    noOrdersMsg.textContent = 'You have no orders yet.';
+                }
+                return;
+            }
+
+            if (noOrdersMsg) noOrdersMsg.style.display = 'none';
+
+            tbody.innerHTML = filtered.map(order => {
+                // items summary
+                const itemSummary = (order.items || []).map(i => `${i.name} x${i.quantity || i.qty || 1}`).join(', ');
+                const date = order.date || order.createdAt || order.orderDate || '';
+                const total = typeof order.total === 'number' ? `₱${order.total.toFixed(2)}` : (order.total || '₱0.00');
+
+                return `
+                    <tr>
+                        <td>#${order.id || order.orderId || ''}</td>
+                        <td>${date}</td>
+                        <td>${itemSummary}</td>
+                        <td>${total}</td>
+                        <td>${order.status || ''}</td>
+                        <td>
+                            <button class="btn btn-secondary view-order-btn" data-id="${order.id || order.orderId || ''}">View</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            // attach handlers for view buttons
+            tbody.querySelectorAll('.view-order-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    const order = filtered.find(o => (String(o.id) === String(id) || String(o.orderId) === String(id)));
+                    if (!order) return showNotification('Order not found', 'error');
+
+                    const itemsList = (order.items || []).map(i => `${i.name} x${i.quantity || i.qty || 1}`).join('\n');
+                    alert(`Order #${order.id || order.orderId}\nCustomer: ${order.customerName || order.customer || ''}\nPhone: ${order.customerPhone || ''}\nAddress: ${order.deliveryAddress || ''}\nItems:\n${itemsList}\nTotal: ${typeof order.total === 'number' ? `₱${order.total.toFixed(2)}` : (order.total || '')}\nStatus: ${order.status || ''}\nPayment: ${order.paymentMethod || ''}`);
+                });
+            });
+        }
+
+        // Payment functions
+        function openPaymentModal() {
+            if (!currentUser) {
+                closeModal(paymentModal);
+                openModal(loginModal);
+                showNotification('Please login to place an order', 'error');
+                return;
+            }
+
+            if (cart.length === 0) {
+                showNotification('Your cart is empty', 'error');
+                return;
+            }
+
+            // Update order summary
+            const orderItemsList = document.getElementById('order-items-list');
+            orderItemsList.innerHTML = cart.map(item => `
+                <div style="display: flex; justify-content: space-between; padding: 5px 0;">
+                    <span>${item.quantity}x ${item.name}</span>
+                    <span>₱${(item.price * item.quantity).toFixed(2)}</span>
+                </div>
+            `).join('');
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            document.getElementById('payment-total-amount').textContent = `₱${total.toFixed(2)}`;
+
+            // Pre-fill customer details if available
+            if (currentUser) {
+                document.getElementById('customer-name').value = currentUser.name;
+            }
+
+            // Ensure the correct payment details block is visible for the currently selected method
+            const checked = document.querySelector('input[name="payment-method"]:checked');
+            if (checked) updatePaymentDetails(checked.value);
+
+            openModal(paymentModal);
+        }
+
+        function updatePaymentDetails(method) {
+            // Hide all payment details
+            document.querySelectorAll('.payment-details').forEach(detail => {
+                detail.classList.remove('active');
+            });
+
+            // Map method values to actual detail element IDs
+            let detailId = '';
+            if (!method) method = 'gcash';
+            switch (method) {
+                case 'credit_card':
+                    detailId = 'credit-card-details';
+                    break;
+                case 'cash_on_delivery':
+                    detailId = 'cod-details';
+                    break;
+                default:
+                    // default mapping: replace underscores with hyphens (e.g., gcash -> gcash-details)
+                    detailId = `${method}-details`.replace(/_/g, '-');
+            }
+
+            const selectedDetail = document.getElementById(detailId);
+            if (selectedDetail) {
+                selectedDetail.classList.add('active');
+            }
+        }
+
+        function processPayment(e) {
+            e.preventDefault();
+           
+            if (!currentUser) {
+                showNotification('Please login to place an order', 'error');
+                return;
+            }
+
+            if (cart.length === 0) {
+                showNotification('Your cart is empty', 'error');
+                return;
+            }
+
+            const customerName = document.getElementById('customer-name').value;
+            const customerPhone = document.getElementById('customer-phone').value;
+            const deliveryAddress = document.getElementById('delivery-address').value;
+            const paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+           
+            // Validate required fields
+            if (!customerName || !customerPhone || !deliveryAddress) {
+                showNotification('Please fill in all required fields', 'error');
+                return;
+            }
+
+            // Create new order
+            const newOrder = {
+                id: nextOrderId++,
+                customerName: customerName,
+                customerEmail: currentUser.email,
+                customerPhone: customerPhone,
+                deliveryAddress: deliveryAddress,
+                items: [...cart],
+                total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+                status: 'pending',
+                paymentMethod: paymentMethod,
+                date: new Date().toLocaleDateString(),
+                orderTime: new Date().toLocaleTimeString()
+            };
+
+            // Add to orders
+            orders.unshift(newOrder);
+
+            // Save user's order for tracking
+            if (!userOrders[currentUser.email]) {
+                userOrders[currentUser.email] = [];
+            }
+            userOrders[currentUser.email].push(newOrder);
+
+            // Clear cart
+            cart = [];
+            updateCartUI();
+
+            // Close modals
+            closeModal(paymentModal);
+            toggleCart();
+
+            // Show confirmation
+            document.getElementById('confirmed-order-id').textContent = newOrder.id;
+            document.getElementById('confirmed-order-total').textContent = `₱${newOrder.total.toFixed(2)}`;
+            document.getElementById('confirmed-payment-method').textContent = formatPaymentMethod(newOrder.paymentMethod);
+            openModal(orderConfirmationModal);
+
+            // Update orders tables
+            renderOrdersTable();
+            renderStaffOrdersTable();
+
+            // Save data
+            saveDataToLocalStorage();
+
+            showNotification(`Order #${newOrder.id} placed successfully!`, 'success');
+        }
+
+        function formatPaymentMethod(method) {
+            const methods = {
+                'gcash': 'GCash',
+                'credit_card': 'Credit Card',
+                'cash_on_delivery': 'Cash on Delivery'
+            };
+            return methods[method] || method;
+        }
+
+        function closeOrderConfirmation() {
+            closeModal(orderConfirmationModal);
+            paymentForm.reset();
+        }
+
+        // Modal functions
+        function openModal(modal) {
+            modal.classList.add('active');
+            overlay.classList.add('active');
+        }
+
+        function closeModal(modal) {
+            modal.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+
+        function closeAllModals() {
+            closeModal(loginModal);
+            closeModal(registerModal);
+            closeModal(paymentModal);
+            closeModal(orderConfirmationModal);
+            cartSidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+
+        // Notification function
+        function showNotification(message, type = 'success') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: ${type === 'error' ? '#ff5252' : '#4caf50'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: var(--radius);
+                box-shadow: var(--shadow);
+                z-index: 10000;
+                transform: translateY(100px);
+                opacity: 0;
+                transition: all 0.3s ease;
+            `;
+           
+            document.body.appendChild(notification);
+           
+            // Animate in
+            setTimeout(() => {
+                notification.style.transform = 'translateY(0)';
+                notification.style.opacity = '1';
+            }, 10);
+           
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.transform = 'translateY(100px)';
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Data persistence
+        function saveDataToLocalStorage() {
+            try {
+                localStorage.setItem('wb_cookies', JSON.stringify(cookies));
+                localStorage.setItem('wb_orders', JSON.stringify(orders));
+                localStorage.setItem('wb_userOrders', JSON.stringify(userOrders));
+                localStorage.setItem('wb_users', JSON.stringify(users));
+                localStorage.setItem('wb_nextOrderId', nextOrderId.toString());
+                localStorage.setItem('wb_cart', JSON.stringify(cart));
+            } catch (e) {
+                console.warn('Failed to save data to localStorage:', e);
+            }
+        }
+
+        function loadDataFromLocalStorage() {
+            try {
+                const savedCookies = localStorage.getItem('wb_cookies');
+                const savedOrders = localStorage.getItem('wb_orders');
+                const savedUserOrders = localStorage.getItem('wb_userOrders');
+                const savedUsers = localStorage.getItem('wb_users');
+                const savedNextOrderId = localStorage.getItem('wb_nextOrderId');
+                const savedCart = localStorage.getItem('wb_cart');
+               
+                if (savedCookies) {
+                    const parsed = JSON.parse(savedCookies);
+                    // Merge with default cookies to ensure we have all required fields
+                    cookies.forEach((cookie, index) => {
+                        if (parsed[index]) {
+                            Object.assign(cookie, parsed[index]);
+                        }
+                    });
+                }
+               
+                if (savedOrders) orders = JSON.parse(savedOrders);
+                if (savedUserOrders) userOrders = JSON.parse(savedUserOrders);
+                if (savedUsers) {
+                    const parsedUsers = JSON.parse(savedUsers);
+                    // Merge with default users to ensure we have all required fields
+                    users.forEach((user, index) => {
+                        if (parsedUsers[index]) {
+                            Object.assign(user, parsedUsers[index]);
+                        }
+                    });
+                    // Add any additional users
+                    if (parsedUsers.length > users.length) {
+                        users.push(...parsedUsers.slice(users.length));
+                    }
+                }
+                if (savedNextOrderId) nextOrderId = parseInt(savedNextOrderId);
+                if (savedCart) cart = JSON.parse(savedCart);
+            } catch (e) {
+                console.warn('Failed to load data from localStorage:', e);
+            }
+        }
+
+        function showTerms() {
+            alert(`Wink Bite Terms and Conditions:
+   
+1. All orders must be paid in full before delivery
+2. Delivery within 30-45 minutes
+3. Cancellations must be made within 10 minutes of ordering
+4. Prices are subject to change without notice
+5. We accept returns within 24 hours for defective products
+   
+By placing an order, you agree to these terms.`);
+        }
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+               
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+               
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Track Order functionality
+        const trackModal = document.getElementById('track-modal');
+        const trackBtn = document.getElementById('track-order-btn');
+        const closeTrack = document.getElementById('close-track');
+        const trackForm = document.getElementById('track-form');
+        const trackInput = document.getElementById('track-id');
+        const trackResult = document.getElementById('track-result');
+        const trackStepsContainer = document.getElementById('track-steps');
+        const trackProgressBar = document.getElementById('track-progress-bar');
+        const trackMeta = document.getElementById('track-meta');
+        const clearTrack = document.getElementById('clear-track');
+
+        if (trackBtn) trackBtn.addEventListener('click', () => openModal(trackModal));
+        if (closeTrack) closeTrack.addEventListener('click', () => closeModal(trackModal));
+        if (clearTrack) clearTrack.addEventListener('click', function() {
+            trackInput.value = '';
+            trackResult.style.display = 'none';
+            trackStepsContainer.innerHTML = '';
+            trackProgressBar.style.width = '0%';
+            trackMeta.textContent = '';
+        });
+
+        trackForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const raw = trackInput.value.trim();
+            if (!raw) {
+                showNotification('Please enter an Order ID', 'error');
+                return;
+            }
+
+            // Normalize ID (allow #1001 or 1001)
+            const id = parseInt(raw.replace('#', ''), 10);
+            if (isNaN(id)) {
+                alert('Order not found. Please check your ID.');
+                return;
+            }
+
+            const order = orders.find(o => o.id === id);
+            if (!order) {
+                alert('Order not found. Please check your ID.');
+                return;
+            }
+
+            // Define the visible steps
+            const steps = [
+                { key: 'confirmed', label: 'Order Confirmed', icon: '✅' },
+                { key: 'preparing', label: 'Packed', icon: '📦' },
+                { key: 'shipped', label: 'Shipped', icon: '🚚' },
+                { key: 'ready', label: 'Out for Delivery', icon: '🏍️' },
+                { key: 'completed', label: 'Delivered', icon: '🎉' }
+            ];
+
+            // Map existing order.status to an index
+            const statusIndexMap = { 'pending': 0, 'confirmed': 0, 'preparing': 1, 'ready': 3, 'completed': 4 };
+            // fallback: if status exactly matches one of the step keys, use that index
+            let currentIndex = statusIndexMap[order.status] !== undefined ? statusIndexMap[order.status] : steps.findIndex(s => s.key === order.status);
+            if (currentIndex === -1) currentIndex = 0;
+
+            // Render steps
+            trackStepsContainer.innerHTML = steps.map((s, i) => `
+                <div class="track-step ${i < currentIndex ? 'completed' : i === currentIndex ? 'current' : ''}">
+                    <div class="icon">${s.icon}</div>
+                    <div class="label">${s.label}</div>
+                </div>
+            `).join('');
+
+            // Update progress bar (percentage based on steps)
+            const percent = Math.round((currentIndex) / (steps.length - 1) * 100);
+            trackProgressBar.style.width = percent + '%';
+
+            // Estimated delivery (simple heuristic)
+            let addDays = 2;
+            if (order.status === 'completed') addDays = 0;
+            else if (order.status === 'ready') addDays = 0;
+            else if (order.status === 'preparing') addDays = 0;
+            else if (order.status === 'confirmed') addDays = 1;
+
+            const estDate = new Date();
+            estDate.setDate(estDate.getDate() + addDays);
+
+            trackMeta.innerHTML = `
+                <strong>Current status:</strong> ${steps[currentIndex].label}<br>
+                <strong>Estimated Delivery Date:</strong> ${estDate.toLocaleDateString()}
+            `;
+
+            trackResult.style.display = 'block';
+            // Ensure modal is open so user can see result
+            openModal(trackModal);
+        });
+    </script>
+</body>
+</html>
